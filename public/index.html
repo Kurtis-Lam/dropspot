@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <title>DropSpot</title>
+  <style>
+    :root {
+      --bg: #f0f6ff;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5eaf3;
+      --primary: #3b6ef5;
+      --primary-light: #ebf0ff;
+      --primary-dark: #2451d4;
+      --danger: #ef4444;
+      --danger-light: #fff1f1;
+      --success: #16a34a;
+      --success-light: #f0fdf4;
+      --warn-light: #fffbeb;
+      --shadow-sm: 0 1px 4px rgba(17,24,39,.07);
+      --shadow-md: 0 4px 18px rgba(59,110,245,.10);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --radius-full: 999px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+    }
+
+    .app {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      max-height: 92dvh;
+      overflow-y: auto;
+    }
+
+    /* ─── AUTH ─── */
+    .auth-header {
+      padding: 28px 24px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: var(--primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    .brand-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.3px;
+    }
+
+    .auth-toggle {
+      display: flex;
+      background: #f3f4f6;
+      border-radius: var(--radius-sm);
+      padding: 3px;
+      margin-bottom: 22px;
+    }
+
+    .auth-toggle button {
+      flex: 1;
+      border: none;
+      background: transparent;
+      border-radius: 7px;
+      padding: 8px;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background .18s, color .18s, box-shadow .18s;
+    }
+
+    .auth-toggle button.active {
+      background: white;
+      color: var(--text);
+      box-shadow: 0 1px 5px rgba(0,0,0,.12);
+    }
+
+    .auth-body { padding: 0 24px 24px; }
+
+    .field { margin-bottom: 14px; }
+
+    label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: #f9fafb;
+      border: 1.5px solid var(--line);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      padding: 11px 13px;
+      font-size: .96rem;
+      transition: border-color .18s, box-shadow .18s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(59,110,245,.14);
+      background: white;
+    }
+
+    input::placeholder { color: #c0c4cc; }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 11px 16px;
+      font-size: .93rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform .1s, opacity .18s, background .18s, box-shadow .18s;
+      touch-action: manipulation;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(.97); }
+    .btn[disabled] { opacity: .55; cursor: not-allowed; transform: none !important; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      width: 100%;
+      padding: 13px;
+      font-size: .97rem;
+      box-shadow: 0 4px 14px rgba(59,110,245,.28);
+    }
+
+    .btn-primary:hover:not([disabled]) { background: var(--primary-dark); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--line);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover:not([disabled]) { background: #f3f4f6; color: var(--text); }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover:not([disabled]) { background: #dc2626; }
+
+    .btn-soft {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1.5px solid #c7d7ff;
+    }
+
+    .btn-soft:hover:not([disabled]) { background: #dde6ff; }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1.5px solid var(--line);
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .btn-icon:hover { background: #f3f4f6; color: var(--text); }
+
+    .hidden { display: none !important; }
+
+    /* ─── MAIN HEADER ─── */
+    .main-header {
+      padding: 20px 20px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .greeting {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -.3px;
+    }
+
+    .greeting-sub {
+      font-size: .84rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ─── TABS ─── */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      margin: 16px 20px 0;
+      border-bottom: 2px solid var(--line);
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 10px 14px;
+      font-size: .9rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      position: relative;
+      transition: color .18s;
+    }
+
+    .tab-btn::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px 2px 0 0;
+      transform: scaleX(0);
+      transition: transform .2s;
+    }
+
+    .tab-btn.active { color: var(--primary); }
+    .tab-btn.active::after { transform: scaleX(1); }
+
+    /* ─── PANELS ─── */
+    .panel { padding: 16px 20px 24px; }
+
+    /* ─── UPLOAD ZONE ─── */
+    .drop-zone {
+      border: 2px dashed #c7d7ff;
+      background: #f5f8ff;
+      border-radius: var(--radius);
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .drop-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .drop-title {
+      font-weight: 700;
+      color: var(--text);
+      font-size: .97rem;
+      margin-bottom: 4px;
+    }
+
+    .drop-sub {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .file-input-hidden { display: none; }
+
+    /* ─── SELECTED FILES ─── */
+    .selected-wrap {
+      margin-top: 14px;
+    }
+
+    .selected-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .section-label {
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: var(--muted);
+    }
+
+    .file-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: white;
+    }
+
+    .file-thumb-placeholder {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .82rem;
+      color: var(--primary);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .file-thumb-preview {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--line);
+    }
+
+    .file-meta { flex: 1; min-width: 0; }
+
+    .file-name {
+      font-size: .88rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+    }
+
+    .file-size {
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .remove-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1rem;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .15s, color .15s;
+    }
+
+    .remove-btn:hover { background: var(--danger-light); color: var(--danger); }
+
+    .upload-footer {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ─── STATUS BAR ─── */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .84rem;
+      color: var(--muted);
+      min-height: 22px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .status-dot.green { background: var(--success); }
+    .status-dot.red { background: var(--danger); }
+    .status-dot.blue { background: var(--primary); }
+
+    /* ─── UPLOAD PROGRESS ─── */
+    .progress-track {
+      height: 4px;
+      background: var(--line);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: var(--radius-full);
+      transition: width .3s ease;
+      width: 0%;
+    }
+
+    /* ─── GALLERY ─── */
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .count-badge {
+      font-size: .76rem;
+      font-weight: 700;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      padding: 2px 8px;
+    }
+
+    .image-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 50dvh;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .image-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      touch-action: pan-y;
+      transition: transform .18s, background .18s, border-color .18s, opacity .18s;
+    }
+
+    .image-card.is-pinned { border-color: #86efac; }
+    .image-card.swiping-left { background: #fff1f1; border-color: #fca5a5; }
+    .image-card.swiping-right { background: var(--success-light); border-color: #86efac; }
+
+    .image-card.anim-delete {
+      animation: slideOutLeft .26s ease forwards;
+    }
+
+    .image-card.anim-pin {
+      animation: bounceIn .32s ease;
+    }
+
+    @keyframes slideOutLeft {
+      to { transform: translateX(-120%); opacity: 0; }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: translateX(20px); }
+      50% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .img-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 9px;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+      background: var(--bg);
+      cursor: pointer;
+    }
+
+    .img-meta { flex: 1; min-width: 0; cursor: pointer; }
+
+    .img-name {
+      font-size: .9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .img-info {
+      font-size: .75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pin-tag {
+      font-size: .7rem;
+      font-weight: 700;
+      background: var(--success-light);
+      color: #15803d;
+      border: 1px solid #86efac;
+      border-radius: var(--radius-full);
+      padding: 2px 7px;
+      flex-shrink: 0;
+    }
+
+    .dl-btn {
+      flex-shrink: 0;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s, transform .1s;
+    }
+
+    .dl-btn:hover { background: var(--primary-dark); }
+    .dl-btn:active { transform: scale(.95); }
+    .dl-btn[disabled] { opacity: .55; cursor: not-allowed; transform: none; }
+
+    /* ─── SWIPE HINTS ─── */
+    .swipe-hint {
+      display: flex;
+      justify-content: space-between;
+      font-size: .73rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      padding: 0 4px;
+      opacity: .8;
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      text-align: center;
+      padding: 36px 20px;
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .empty-title {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .empty-sub {
+      font-size: .86rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── SETTINGS MODAL ─── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.45);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 1200;
+      padding: 12px;
+    }
+
+    @media (min-height: 600px) {
+      .overlay { align-items: center; }
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 440px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(15,23,42,.25);
+      padding: 20px;
+      animation: sheetIn .22s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes sheetIn {
+      from { transform: translateY(16px) scale(.97); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .settings-section {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .settings-row:last-child { border-bottom: none; }
+
+    .settings-row-label {
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .settings-row-sub {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 46px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input { display: none; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-full);
+      background: #d1d5db;
+      transition: background .2s;
+      cursor: pointer;
+    }
+
+    .toggle-track::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      top: 3px;
+      left: 3px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.2);
+      transition: transform .2s;
+    }
+
+    .toggle-switch input:checked + .toggle-track { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-track::before { transform: translateX(20px); }
+
+    .settings-btn-row {
+      padding: 12px 14px;
+    }
+
+    /* ─── POPUP (change name) ─── */
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1400;
+      padding: 16px;
+    }
+
+    .popup-card {
+      width: 100%;
+      max-width: 380px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(15,23,42,.3);
+      padding: 20px;
+      animation: sheetIn .2s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    /* ─── VIEWER ─── */
+    .viewer {
+      position: fixed;
+      inset: 0;
+      background: rgba(3,8,22,.92);
+      z-index: 1300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .viewer-inner {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .viewer-img {
+      max-width: 100%;
+      max-height: 72dvh;
+      border-radius: var(--radius);
+      object-fit: contain;
+    }
+
+    .viewer-caption {
+      color: rgba(255,255,255,.7);
+      font-size: .86rem;
+      text-align: center;
+    }
+
+    .viewer-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(30,41,59,.6);
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .18s;
+    }
+
+    .viewer-nav:hover { background: rgba(59,110,245,.6); }
+    .viewer-nav.left { left: max(10px, env(safe-area-inset-left)); }
+    .viewer-nav.right { right: max(10px, env(safe-area-inset-right)); }
+
+    .viewer-close {
+      position: fixed;
+      top: max(12px, env(safe-area-inset-top));
+      right: max(12px, env(safe-area-inset-right));
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(30,41,59,.6);
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      transition: background .18s;
+    }
+
+    .viewer-close:hover { background: rgba(239,68,68,.6); }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: max(12px, env(safe-area-inset-top));
+      transform: translate(-50%, -60px);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1500;
+      border-radius: var(--radius-full);
+      padding: 10px 18px;
+      background: #1f2937;
+      color: white;
+      font-size: .86rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,.22);
+      transition: transform .24s cubic-bezier(.34,1.56,.64,1), opacity .24s;
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .toast .toast-icon { font-size: 1rem; }
+
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+    .toast.success { background: #166534; }
+    .toast.error { background: #991b1b; }
+    .toast.info { background: #1e3a8a; }
+
+    /* ─── MISC ─── */
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0;
+    }
+
+    @media (max-width: 420px) {
+      .app { padding: 0; }
+      .container { border-radius: 0; max-height: 100dvh; border: none; }
+      .screen { max-height: 100dvh; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="container">
+
+    <!-- AUTH SCREEN -->
+    <section id="authScreen" class="screen">
+      <div class="auth-header">
+        <div class="brand">
+          <div class="brand-icon">📦</div>
+          <span class="brand-name">DropSpot</span>
+        </div>
+
+        <div class="auth-toggle">
+          <button id="loginModeBtn" class="active">Log in</button>
+          <button id="signupModeBtn">Create account</button>
+        </div>
+      </div>
+
+      <div class="auth-body">
+        <div class="field hidden" id="nameFieldWrap">
+          <label for="nameInput">Your name</label>
+          <input id="nameInput" type="text" placeholder="e.g. Alex" autocomplete="name" />
+        </div>
+
+        <div class="field">
+          <label for="emailInput">Email</label>
+          <input id="emailInput" type="email" placeholder="you@example.com" autocomplete="email" />
+        </div>
+
+        <div class="field">
+          <label for="passwordInput">Password</label>
+          <input id="passwordInput" type="password" placeholder="Min 6 characters" autocomplete="current-password" />
+        </div>
+
+        <button id="authSubmitBtn" class="btn btn-primary" style="margin-top:4px;">Log in</button>
+
+        <div id="authStatus" class="status-bar" style="margin-top: 10px; justify-content: center;"></div>
+      </div>
+    </section>
+
+    <!-- MAIN SCREEN -->
+    <section id="mainScreen" class="screen hidden">
+      <div class="main-header">
+        <div>
+          <div id="welcomeText" class="greeting">My Images</div>
+          <div class="greeting-sub" id="welcomeSub">Loading…</div>
+        </div>
+        <button id="settingsBtn" class="btn-icon btn" title="Settings">⚙️</button>
+      </div>
+
+      <div class="tab-bar">
+        <button id="tabUploadBtn" class="tab-btn active">Upload</button>
+        <button id="tabDownloadBtn" class="tab-btn">My Images</button>
+      </div>
+
+      <!-- UPLOAD PANEL -->
+      <div id="uploadPanel" class="panel">
+        <label for="fileInput" class="drop-zone" id="dropZone">
+          <span class="drop-icon">🖼️</span>
+          <div class="drop-title">Choose images to upload</div>
+          <div class="drop-sub">JPG, PNG — any size</div>
+          <span class="btn btn-soft" style="display:inline-flex; margin: 0 auto;">Browse files</span>
+        </label>
+        <input id="fileInput" class="file-input-hidden" type="file" accept="image/*" multiple />
+
+        <div id="selectedWrap" class="selected-wrap hidden">
+          <div class="selected-header">
+            <span class="section-label" id="selectedLabel">0 selected</span>
+            <button id="clearSelectedBtn" class="btn btn-ghost" style="padding:5px 10px; font-size:.8rem;">Clear all</button>
+          </div>
+          <ul id="selectedList" class="file-list"></ul>
+        </div>
+
+        <div class="upload-footer">
+          <div id="progressWrap" class="hidden">
+            <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+          </div>
+          <button id="uploadBtn" class="btn btn-primary" disabled>Upload images</button>
+          <div id="uploadStatus" class="status-bar" style="justify-content: center;"></div>
+        </div>
+      </div>
+
+      <!-- DOWNLOAD PANEL -->
+      <div id="downloadPanel" class="panel hidden">
+        <div class="gallery-header">
+          <span class="section-label">Your uploads</span>
+          <span id="countBadge" class="count-badge hidden"></span>
+        </div>
+
+        <div id="swipeHint" class="swipe-hint hidden">
+          <span>← Swipe left to delete</span>
+          <span>Swipe right to pin →</span>
+        </div>
+
+        <ul id="uploadedList" class="image-list"></ul>
+        <div id="downloadStatus" class="status-bar" style="margin-top: 10px; justify-content: center;"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" class="overlay hidden">
+  <div class="modal-sheet">
+    <div class="modal-head">
+      <span class="modal-title">Settings</span>
+      <button id="settingsCloseBtn" class="btn-icon btn">✕</button>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <div class="settings-row-label">Account</div>
+          <div class="settings-row-sub" id="settingsEmailText">–</div>
+        </div>
+      </div>
+      <div class="settings-btn-row">
+        <button id="changeNameBtn" class="btn btn-ghost" style="width:100%; margin-bottom:6px;">✏️ Change name</button>
+        <button id="sendResetBtn" class="btn btn-ghost" style="width:100%;">🔑 Send password reset link</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-row">
+        <div>
+          <div class="settings-row-label">Auto-delete after download</div>
+          <div class="settings-row-sub">Remove the image record as soon as you download it.</div>
+        </div>
+        <label class="toggle-switch">
+          <input id="autoDeleteToggle" type="checkbox" />
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+
+    <button id="settingsLogoutBtn" class="btn btn-danger" style="width:100%;">Log out</button>
+
+    <div id="settingsStatus" class="status-bar" style="margin-top: 10px; justify-content: center;"></div>
+  </div>
+</div>
+
+<!-- CHANGE NAME POPUP -->
+<div id="changeNameModal" class="popup-overlay hidden">
+  <div class="popup-card">
+    <div class="modal-head">
+      <span class="modal-title">Change name</span>
+      <button id="changeNameCloseBtn" class="btn-icon btn">✕</button>
+    </div>
+
+    <div class="field">
+      <label for="newNameInput">New name</label>
+      <input id="newNameInput" type="text" placeholder="Your new name" />
+    </div>
+
+    <div class="field">
+      <label for="nameChangePasswordInput">Current password</label>
+      <input id="nameChangePasswordInput" type="password" placeholder="Confirm with your password" />
+    </div>
+
+    <button id="confirmNameChangeBtn" class="btn btn-primary" style="margin-top:4px;">Save name</button>
+  </div>
+</div>
+
+<!-- IMAGE VIEWER -->
+<div id="viewerModal" class="viewer hidden">
+  <button id="viewerCloseBtn" class="viewer-close" aria-label="Close">✕</button>
+  <button id="viewerPrevBtn" class="viewer-nav left" aria-label="Previous">‹</button>
+  <div class="viewer-inner">
+    <img id="viewerImage" class="viewer-img" src="" alt="Preview" />
+    <div id="viewerCaption" class="viewer-caption"></div>
+  </div>
+  <button id="viewerNextBtn" class="viewer-nav right" aria-label="Next">›</button>
+</div>
+
+<div id="toast" class="toast"><span class="toast-icon" id="toastIcon"></span><span id="toastText"></span></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+<script>
+  /* ── CONFIG ── */
+  const firebaseConfig = {
+    apiKey: "AIzaSyAZnTjiT5bLf764Q2cK2AFSwjgUzSrj2LE",
+    authDomain: "dropspot-0.firebaseapp.com",
+    databaseURL: "https://dropspot-0-default-rtdb.firebaseio.com",
+    projectId: "dropspot-0",
+    storageBucket: "dropspot-0.appspot.com",
+    messagingSenderId: "606872364661",
+    appId: "1:606872364661:android:a0a26072d1b49ff0a37a3c"
+  };
+  const CLOUDINARY_CLOUD_NAME = "dykgkiciw";
+  const CLOUDINARY_UPLOAD_PRESET = "dykgkiciw";
+
+  /* ── INIT ── */
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.database();
+
+  /* ── ELEMENTS ── */
+  const authScreen = document.getElementById("authScreen");
+  const mainScreen = document.getElementById("mainScreen");
+  const nameFieldWrap = document.getElementById("nameFieldWrap");
+  const nameInput = document.getElementById("nameInput");
+  const emailInput = document.getElementById("emailInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const loginModeBtn = document.getElementById("loginModeBtn");
+  const signupModeBtn = document.getElementById("signupModeBtn");
+  const authSubmitBtn = document.getElementById("authSubmitBtn");
+  const authStatus = document.getElementById("authStatus");
+
+  const welcomeText = document.getElementById("welcomeText");
+  const welcomeSub = document.getElementById("welcomeSub");
+  const settingsBtn = document.getElementById("settingsBtn");
+  const tabUploadBtn = document.getElementById("tabUploadBtn");
+  const tabDownloadBtn = document.getElementById("tabDownloadBtn");
+  const uploadPanel = document.getElementById("uploadPanel");
+  const downloadPanel = document.getElementById("downloadPanel");
+
+  const fileInput = document.getElementById("fileInput");
+  const dropZone = document.getElementById("dropZone");
+  const selectedWrap = document.getElementById("selectedWrap");
+  const selectedList = document.getElementById("selectedList");
+  const selectedLabel = document.getElementById("selectedLabel");
+  const clearSelectedBtn = document.getElementById("clearSelectedBtn");
+  const uploadBtn = document.getElementById("uploadBtn");
+  const uploadStatus = document.getElementById("uploadStatus");
+  const progressWrap = document.getElementById("progressWrap");
+  const progressFill = document.getElementById("progressFill");
+
+  const uploadedList = document.getElementById("uploadedList");
+  const downloadStatus = document.getElementById("downloadStatus");
+  const countBadge = document.getElementById("countBadge");
+  const swipeHint = document.getElementById("swipeHint");
+
+  const settingsModal = document.getElementById("settingsModal");
+  const settingsCloseBtn = document.getElementById("settingsCloseBtn");
+  const settingsStatus = document.getElementById("settingsStatus");
+  const changeNameBtn = document.getElementById("changeNameBtn");
+  const sendResetBtn = document.getElementById("sendResetBtn");
+  const autoDeleteToggle = document.getElementById("autoDeleteToggle");
+  const settingsEmailText = document.getElementById("settingsEmailText");
+  const settingsLogoutBtn = document.getElementById("settingsLogoutBtn");
+
+  const changeNameModal = document.getElementById("changeNameModal");
+  const changeNameCloseBtn = document.getElementById("changeNameCloseBtn");
+  const newNameInput = document.getElementById("newNameInput");
+  const nameChangePasswordInput = document.getElementById("nameChangePasswordInput");
+  const confirmNameChangeBtn = document.getElementById("confirmNameChangeBtn");
+
+  const viewerModal = document.getElementById("viewerModal");
+  const viewerImage = document.getElementById("viewerImage");
+  const viewerCaption = document.getElementById("viewerCaption");
+  const viewerPrevBtn = document.getElementById("viewerPrevBtn");
+  const viewerNextBtn = document.getElementById("viewerNextBtn");
+  const viewerCloseBtn = document.getElementById("viewerCloseBtn");
+
+  const toast = document.getElementById("toast");
+  const toastIcon = document.getElementById("toastIcon");
+  const toastText = document.getElementById("toastText");
+
+  /* ── STATE ── */
+  let isSignupMode = false;
+  let selectedFiles = [];
+  let currentUser = null;
+  let uploadsRefListener = null;
+  let currentUploads = [];
+  let autoDeleteAfterDownload = false;
+  let viewerIndex = 0;
+  let suppressPreviewClick = false;
+  let toastTimer = null;
+
+  /* ── HELPERS ── */
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+  }
+
+  function showToast(message, type = "info") {
+    const icons = { success: "✓", error: "✕", info: "ℹ" };
+    toastIcon.textContent = icons[type] || "ℹ";
+    toastText.textContent = message;
+    toast.className = "toast show " + type;
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toast.className = "toast"; }, 2600);
+  }
+
+  function setStatus(el, message, dot = "") {
+    el.innerHTML = dot
+      ? `<span class="status-dot ${dot}"></span>${escapeHtml(message)}`
+      : escapeHtml(message);
+  }
+
+  function setAuthMode(signup) {
+    isSignupMode = signup;
+    nameFieldWrap.classList.toggle("hidden", !signup);
+    authSubmitBtn.textContent = signup ? "Create account" : "Log in";
+    authStatus.textContent = "";
+    loginModeBtn.classList.toggle("active", !signup);
+    signupModeBtn.classList.toggle("active", signup);
+  }
+
+  function setScreen(loggedIn) {
+    authScreen.classList.toggle("hidden", loggedIn);
+    mainScreen.classList.toggle("hidden", !loggedIn);
+  }
+
+  function setTab(tab) {
+    const isUpload = tab === "upload";
+    uploadPanel.classList.toggle("hidden", !isUpload);
+    downloadPanel.classList.toggle("hidden", isUpload);
+    tabUploadBtn.classList.toggle("active", isUpload);
+    tabDownloadBtn.classList.toggle("active", !isUpload);
+    if (!isUpload && currentUser) loadUploads(currentUser.uid);
+    else cleanupUploadsListener();
+  }
+
+  function formatBytes(bytes) {
+    if (bytes == null) return "";
+    if (bytes < 1024) return bytes + " B";
+    const kb = bytes / 1024;
+    if (kb < 1024) return kb.toFixed(1) + " KB";
+    return (kb / 1024).toFixed(1) + " MB";
+  }
+
+  function formatTime(ts) {
+    return new Date(ts || Date.now()).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function safeFileName(name) {
+    return (name || "image.jpg").replace(/[^\w.\-]+/g, "_");
+  }
+
+  function cloudinaryAttachmentUrl(url, filename) {
+    try {
+      const u = new URL(url);
+      if (!u.hostname.includes("cloudinary.com")) return url;
+      const parts = u.pathname.split("/upload/");
+      if (parts.length < 2) return url;
+      return u.origin + parts[0] + "/upload/fl_attachment:" + encodeURIComponent(filename) + "/" + parts[1];
+    } catch { return url; }
+  }
+
+  function cleanupUploadsListener() {
+    if (uploadsRefListener) { uploadsRefListener.off(); uploadsRefListener = null; }
+  }
+
+  function uploadsComparator(a, b) {
+    const ap = a.pinned ? 1 : 0, bp = b.pinned ? 1 : 0;
+    if (bp !== ap) return bp - ap;
+    if (ap && bp) return (b.pinnedAt || 0) - (a.pinnedAt || 0);
+    return (b.uploadedAt || 0) - (a.uploadedAt || 0);
+  }
+
+  /* ── SELECTED FILES ── */
+  function renderSelectedFiles() {
+    selectedList.innerHTML = "";
+    const count = selectedFiles.length;
+    selectedWrap.classList.toggle("hidden", count === 0);
+    uploadBtn.disabled = count === 0;
+    selectedLabel.textContent = count === 1 ? "1 image selected" : count + " images selected";
+
+    selectedFiles.forEach((file, idx) => {
+      const li = document.createElement("li");
+      li.className = "file-row";
+
+      const ext = (file.name.split(".").pop() || "img").toUpperCase().slice(0, 4);
+
+      // Try to create a preview thumbnail
+      const img = document.createElement("img");
+      img.className = "file-thumb-preview";
+      img.alt = "";
+      const reader = new FileReader();
+      reader.onload = e => { img.src = e.target.result; };
+      reader.readAsDataURL(file);
+
+      const meta = document.createElement("div");
+      meta.className = "file-meta";
+      meta.innerHTML = `<div class="file-name">${escapeHtml(file.name)}</div><div class="file-size">${formatBytes(file.size)}</div>`;
+
+      const rmBtn = document.createElement("button");
+      rmBtn.className = "remove-btn";
+      rmBtn.title = "Remove";
+      rmBtn.textContent = "✕";
+      rmBtn.addEventListener("click", () => {
+        selectedFiles.splice(idx, 1);
+        renderSelectedFiles();
+      });
+
+      li.appendChild(img);
+      li.appendChild(meta);
+      li.appendChild(rmBtn);
+      selectedList.appendChild(li);
+    });
+  }
+
+  /* ── UPLOAD ── */
+  async function uploadToCloudinary(file) {
+    const endpoint = "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload";
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    fd.append("folder", "user_uploads");
+    const res = await fetch(endpoint, { method: "POST", body: fd });
+    if (!res.ok) throw new Error("Upload failed: " + await res.text());
+    return res.json();
+  }
+
+  /* ── VIEWER ── */
+  function openViewer(index) {
+    if (!currentUploads.length) return;
+    viewerIndex = Math.max(0, Math.min(index, currentUploads.length - 1));
+    viewerModal.classList.remove("hidden");
+    updateViewer();
+  }
+
+  function closeViewer() {
+    viewerModal.classList.add("hidden");
+    viewerImage.src = "";
+    viewerCaption.textContent = "";
+  }
+
+  function updateViewer() {
+    if (!currentUploads.length) { closeViewer(); return; }
+    viewerIndex = Math.max(0, Math.min(viewerIndex, currentUploads.length - 1));
+    const item = currentUploads[viewerIndex];
+    viewerImage.src = item.url;
+    viewerImage.alt = item.originalName || "preview";
+    viewerCaption.textContent = (item.originalName || "image") + " · " + (viewerIndex + 1) + " of " + currentUploads.length;
+  }
+
+  function showPrevImage() {
+    if (!currentUploads.length) return;
+    viewerIndex = (viewerIndex - 1 + currentUploads.length) % currentUploads.length;
+    updateViewer();
+  }
+
+  function showNextImage() {
+    if (!currentUploads.length) return;
+    viewerIndex = (viewerIndex + 1) % currentUploads.length;
+    updateViewer();
+  }
+
+  /* ── DELETE / PIN ── */
+  async function deleteUploadItem(id, silent = false) {
+    if (!currentUser) return false;
+    try {
+      await db.ref("users/" + currentUser.uid + "/uploads/" + id).remove();
+      if (!silent) showToast("Image deleted", "error");
+      return true;
+    } catch (err) {
+      if (!silent) showToast("Delete failed", "error");
+      return false;
+    }
+  }
+
+  async function pinUploadItem(id) {
+    if (!currentUser) return false;
+    try {
+      await db.ref("users/" + currentUser.uid + "/uploads/" + id).update({ pinned: true, pinnedAt: Date.now() });
+      showToast("Pinned to top", "success");
+      return true;
+    } catch {
+      showToast("Pin failed", "error");
+      return false;
+    }
+  }
+
+  /* ── SWIPE ── */
+  function makeSwipeable(li, item) {
+    let startX = 0, startY = 0, dx = 0, tracking = false, horizontal = false;
+
+    function resetVisual() {
+      li.style.transform = "";
+      li.classList.remove("swiping-left", "swiping-right");
+    }
+
+    li.addEventListener("pointerdown", e => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.target.closest("button")) return;
+      startX = e.clientX; startY = e.clientY; dx = 0;
+      tracking = true; horizontal = false;
+      if (li.setPointerCapture) li.setPointerCapture(e.pointerId);
+    });
+
+    li.addEventListener("pointermove", e => {
+      if (!tracking) return;
+      const mx = e.clientX - startX, my = e.clientY - startY;
+      if (!horizontal) {
+        if (Math.abs(my) > 9 && Math.abs(my) > Math.abs(mx)) { tracking = false; resetVisual(); return; }
+        if (Math.abs(mx) > 6) horizontal = true;
+      }
+      if (!horizontal) return;
+      dx = Math.max(-140, Math.min(140, mx));
+      li.style.transform = "translateX(" + dx + "px)";
+      li.classList.toggle("swiping-left", dx < 0);
+      li.classList.toggle("swiping-right", dx > 0);
+      if (Math.abs(dx) > 8) suppressPreviewClick = true;
+      e.preventDefault();
+    });
+
+    function endSwipe() {
+      if (!tracking && !horizontal) { resetVisual(); suppressPreviewClick = false; return; }
+      tracking = false;
+      const threshold = 88;
+      if (dx <= -threshold) {
+        li.classList.add("anim-delete");
+        li.classList.remove("swiping-left", "swiping-right");
+        setTimeout(() => deleteUploadItem(item.id), 220);
+      } else if (dx >= threshold) {
+        li.classList.add("anim-pin");
+        li.classList.remove("swiping-left", "swiping-right");
+        resetVisual();
+        setTimeout(() => { pinUploadItem(item.id); li.classList.remove("anim-pin"); }, 210);
+      } else {
+        resetVisual();
+      }
+      dx = 0;
+      setTimeout(() => { suppressPreviewClick = false; }, 130);
+    }
+
+    li.addEventListener("pointerup", endSwipe);
+    li.addEventListener("pointercancel", () => { tracking = false; dx = 0; resetVisual(); suppressPreviewClick = false; });
+  }
+
+  /* ── RENDER GALLERY ── */
+  function renderUploads() {
+    uploadedList.innerHTML = "";
+    const count = currentUploads.length;
+
+    if (!count) {
+      countBadge.classList.add("hidden");
+      swipeHint.classList.add("hidden");
+      uploadedList.innerHTML = `
+        <div class="empty-state">
+          <span class="empty-icon">📭</span>
+          <div class="empty-title">No images yet</div>
+          <div class="empty-sub">Upload your first images and they'll appear here.</div>
+        </div>`;
+      if (!viewerModal.classList.contains("hidden")) closeViewer();
+      setStatus(downloadStatus, "");
+      return;
+    }
+
+    countBadge.textContent = count + (count === 1 ? " image" : " images");
+    countBadge.classList.remove("hidden");
+    swipeHint.classList.remove("hidden");
+    setStatus(downloadStatus, "");
+
+    currentUploads.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "image-card";
+      if (item.pinned) li.classList.add("is-pinned");
+
+      const img = document.createElement("img");
+      img.className = "img-thumb";
+      img.src = item.url;
+      img.alt = "thumbnail";
+      img.addEventListener("click", () => { if (!suppressPreviewClick) openViewer(index); });
+
+      const meta = document.createElement("div");
+      meta.className = "img-meta";
+      meta.addEventListener("click", () => { if (!suppressPreviewClick) openViewer(index); });
+
+      const nameLine = document.createElement("div");
+      nameLine.className = "img-name";
+      nameLine.textContent = item.originalName || "image";
+
+      const infoLine = document.createElement("div");
+      infoLine.className = "img-info";
+      const infoParts = [];
+      if (item.uploadedAt) infoParts.push(formatTime(item.uploadedAt));
+      if (item.bytes) infoParts.push(formatBytes(item.bytes));
+      infoLine.textContent = infoParts.join(" · ");
+
+      meta.appendChild(nameLine);
+      meta.appendChild(infoLine);
+
+      if (item.pinned) {
+        const tag = document.createElement("span");
+        tag.className = "pin-tag";
+        tag.textContent = "Pinned";
+        li.appendChild(img);
+        li.appendChild(meta);
+        li.appendChild(tag);
+      } else {
+        li.appendChild(img);
+        li.appendChild(meta);
+      }
+
+      const dlBtn = document.createElement("button");
+      dlBtn.className = "dl-btn";
+      dlBtn.textContent = "⬇ Save";
+      dlBtn.addEventListener("click", e => { e.stopPropagation(); downloadImageDirect(item, dlBtn); });
+      li.appendChild(dlBtn);
+
+      uploadedList.appendChild(li);
+      makeSwipeable(li, item);
+    });
+  }
+
+  function loadUploads(uid) {
+    cleanupUploadsListener();
+    uploadedList.innerHTML = "";
+    setStatus(downloadStatus, "Loading…", "blue");
+
+    const ref = db.ref("users/" + uid + "/uploads");
+    uploadsRefListener = ref;
+
+    ref.on("value", snap => {
+      const data = snap.val() || {};
+      currentUploads = Object.keys(data).map(k => ({ id: k, ...data[k] })).sort(uploadsComparator);
+      renderUploads();
+      if (!viewerModal.classList.contains("hidden")) updateViewer();
+    }, err => {
+      setStatus(downloadStatus, "Failed to load: " + (err.message || "Unknown error"), "red");
+    });
+  }
+
+  /* ── DOWNLOAD ── */
+  async function downloadImageDirect(item, buttonEl) {
+    const orig = buttonEl.textContent;
+    buttonEl.disabled = true;
+    buttonEl.textContent = "…";
+
+    const filename = safeFileName(item.originalName || "image.jpg");
+    let triggered = false;
+
+    try {
+      const resp = await fetch(item.url, { mode: "cors" });
+      if (!resp.ok) throw new Error("Could not fetch.");
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      triggered = true;
+      showToast("Downloaded!", "success");
+    } catch {
+      const a = document.createElement("a");
+      a.href = cloudinaryAttachmentUrl(item.url, filename);
+      a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      triggered = true;
+      showToast("Download started", "info");
+    } finally {
+      buttonEl.disabled = false;
+      buttonEl.textContent = orig;
+    }
+
+    if (triggered && autoDeleteAfterDownload && currentUser) {
+      const deleted = await deleteUploadItem(item.id, true);
+      if (deleted) showToast("Downloaded and removed", "success");
+    }
+  }
+
+  /* ── SETTINGS ── */
+  function openSettings() {
+    if (!currentUser) return;
+    settingsStatus.textContent = "";
+    settingsEmailText.textContent = currentUser.email || "–";
+    settingsModal.classList.remove("hidden");
+  }
+
+  function closeSettings() { settingsModal.classList.add("hidden"); }
+  function openChangeNamePopup() {
+    newNameInput.value = currentUser.displayName || "";
+    nameChangePasswordInput.value = "";
+    changeNameModal.classList.remove("hidden");
+  }
+  function closeChangeNamePopup() { changeNameModal.classList.add("hidden"); }
+
+  async function loadUserSettings(uid) {
+    try {
+      const snap = await db.ref("users/" + uid + "/settings").get();
+      const s = snap.val() || {};
+      autoDeleteAfterDownload = !!s.autoDeleteAfterDownload;
+    } catch { autoDeleteAfterDownload = false; }
+    autoDeleteToggle.checked = autoDeleteAfterDownload;
+  }
+
+  async function reauthenticateCurrentUser(password) {
+    const user = auth.currentUser;
+    if (!user || !user.email) throw new Error("No authenticated user.");
+    const cred = firebase.auth.EmailAuthProvider.credential(user.email, password);
+    await user.reauthenticateWithCredential(cred);
+  }
+
+  /* ── EVENTS ── */
+  loginModeBtn.addEventListener("click", () => setAuthMode(false));
+  signupModeBtn.addEventListener("click", () => setAuthMode(true));
+
+  authSubmitBtn.addEventListener("click", async () => {
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) { setStatus(authStatus, "Please enter your email and password.", "red"); return; }
+    if (isSignupMode && !name) { setStatus(authStatus, "Please enter your name.", "red"); return; }
+
+    authSubmitBtn.disabled = true;
+    authSubmitBtn.textContent = "Please wait…";
+    authStatus.textContent = "";
+
+    try {
+      if (isSignupMode) {
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        await cred.user.updateProfile({ displayName: name });
+        await db.ref("users/" + cred.user.uid).update({
+          profile: { name, email, createdAt: Date.now() },
+          settings: { autoDeleteAfterDownload: false }
+        });
+        showToast("Welcome to DropSpot! 🎉", "success");
+      } else {
+        await auth.signInWithEmailAndPassword(email, password);
+        showToast("Welcome back!", "success");
+      }
+    } catch (err) {
+      const msg = err.code === "auth/user-not-found" ? "No account with that email."
+        : err.code === "auth/wrong-password" ? "Incorrect password."
+        : err.code === "auth/email-already-in-use" ? "That email is already in use."
+        : err.message || "Authentication failed.";
+      setStatus(authStatus, msg, "red");
+      authSubmitBtn.disabled = false;
+      authSubmitBtn.textContent = isSignupMode ? "Create account" : "Log in";
+    }
+  });
+
+  tabUploadBtn.addEventListener("click", () => setTab("upload"));
+  tabDownloadBtn.addEventListener("click", () => setTab("download"));
+  settingsBtn.addEventListener("click", openSettings);
+  settingsCloseBtn.addEventListener("click", closeSettings);
+  settingsModal.addEventListener("click", e => { if (e.target === settingsModal) closeSettings(); });
+  changeNameBtn.addEventListener("click", openChangeNamePopup);
+  changeNameCloseBtn.addEventListener("click", closeChangeNamePopup);
+  changeNameModal.addEventListener("click", e => { if (e.target === changeNameModal) closeChangeNamePopup(); });
+
+  confirmNameChangeBtn.addEventListener("click", async () => {
+    if (!currentUser) return;
+    const newName = newNameInput.value.trim();
+    const pwd = nameChangePasswordInput.value.trim();
+    if (!newName || !pwd) { showToast("Please fill in both fields.", "error"); return; }
+
+    confirmNameChangeBtn.disabled = true;
+    confirmNameChangeBtn.textContent = "Saving…";
+    try {
+      await reauthenticateCurrentUser(pwd);
+      await auth.currentUser.updateProfile({ displayName: newName });
+      await db.ref("users/" + currentUser.uid + "/profile/name").set(newName);
+      welcomeText.textContent = "Hi, " + newName + " 👋";
+      closeChangeNamePopup();
+      showToast("Name updated!", "success");
+    } catch (err) {
+      showToast(err.message || "Could not change name.", "error");
+    } finally {
+      confirmNameChangeBtn.disabled = false;
+      confirmNameChangeBtn.textContent = "Save name";
+    }
+  });
+
+  sendResetBtn.addEventListener("click", async () => {
+    if (!currentUser?.email) return;
+    sendResetBtn.disabled = true;
+    try {
+      await auth.sendPasswordResetEmail(currentUser.email);
+      showToast("Reset link sent to " + currentUser.email, "success");
+    } catch (err) {
+      showToast(err.message || "Could not send reset link.", "error");
+    } finally { sendResetBtn.disabled = false; }
+  });
+
+  autoDeleteToggle.addEventListener("change", async e => {
+    const newVal = !!e.target.checked;
+    const oldVal = autoDeleteAfterDownload;
+    autoDeleteAfterDownload = newVal;
+    if (!currentUser) return;
+    try {
+      await db.ref("users/" + currentUser.uid + "/settings").update({ autoDeleteAfterDownload: newVal });
+      showToast(newVal ? "Auto-delete enabled" : "Auto-delete disabled", "info");
+    } catch {
+      autoDeleteAfterDownload = oldVal;
+      autoDeleteToggle.checked = oldVal;
+      showToast("Could not save setting.", "error");
+    }
+  });
+
+  settingsLogoutBtn.addEventListener("click", async () => {
+    try { await auth.signOut(); closeSettings(); closeChangeNamePopup(); }
+    catch (err) { showToast(err.message || "Logout failed.", "error"); }
+  });
+
+  /* ── FILE PICKING ── */
+  fileInput.addEventListener("change", e => {
+    selectedFiles = Array.from(e.target.files || []);
+    renderSelectedFiles();
+  });
+
+  clearSelectedBtn.addEventListener("click", () => {
+    selectedFiles = [];
+    fileInput.value = "";
+    renderSelectedFiles();
+    uploadStatus.textContent = "";
+  });
+
+  /* ── DRAG & DROP ── */
+  ["dragenter","dragover"].forEach(ev => {
+    dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+  });
+  ["dragleave","drop"].forEach(ev => {
+    dropZone.addEventListener(ev, e => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+      if (ev === "drop" && e.dataTransfer?.files?.length) {
+        selectedFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+        renderSelectedFiles();
+      }
+    });
+  });
+
+  /* ── UPLOAD ── */
+  uploadBtn.addEventListener("click", async () => {
+    if (!currentUser || !selectedFiles.length) return;
+
+    uploadBtn.disabled = true;
+    progressWrap.classList.remove("hidden");
+    progressFill.style.width = "0%";
+
+    const total = selectedFiles.length;
+    let ok = 0;
+
+    setStatus(uploadStatus, "Uploading 0 of " + total + "…", "blue");
+
+    for (let i = 0; i < total; i++) {
+      const file = selectedFiles[i];
+      try {
+        const cloud = await uploadToCloudinary(file);
+        await db.ref("users/" + currentUser.uid + "/uploads").push({
+          url: cloud.secure_url,
+          publicId: cloud.public_id,
+          originalName: file.name,
+          bytes: file.size,
+          uploadedAt: Date.now(),
+          pinned: false
+        });
+        ok++;
+      } catch (err) {
+        console.error(err);
+      }
+      progressFill.style.width = Math.round(((i + 1) / total) * 100) + "%";
+      setStatus(uploadStatus, "Uploading " + (i + 1) + " of " + total + "…", "blue");
+    }
+
+    uploadBtn.disabled = false;
+    progressWrap.classList.add("hidden");
+    selectedFiles = [];
+    fileInput.value = "";
+    renderSelectedFiles();
+
+    if (ok === total) {
+      setStatus(uploadStatus, "All " + total + " uploaded successfully!", "green");
+      showToast("All images uploaded ✓", "success");
+    } else {
+      setStatus(uploadStatus, ok + " of " + total + " uploaded.", ok > 0 ? "green" : "red");
+      showToast(ok + "/" + total + " uploaded", ok === total ? "success" : "error");
+    }
+
+    setTimeout(() => setTab("download"), 800);
+  });
+
+  /* ── VIEWER EVENTS ── */
+  viewerPrevBtn.addEventListener("click", showPrevImage);
+  viewerNextBtn.addEventListener("click", showNextImage);
+  viewerCloseBtn.addEventListener("click", closeViewer);
+  viewerModal.addEventListener("click", e => { if (e.target === viewerModal) closeViewer(); });
+
+  document.addEventListener("keydown", e => {
+    if (!viewerModal.classList.contains("hidden")) {
+      if (e.key === "ArrowLeft") showPrevImage();
+      if (e.key === "ArrowRight") showNextImage();
+      if (e.key === "Escape") closeViewer();
+    } else {
+      if (!changeNameModal.classList.contains("hidden") && e.key === "Escape") closeChangeNamePopup();
+      else if (!settingsModal.classList.contains("hidden") && e.key === "Escape") closeSettings();
+    }
+  });
+
+  /* ── AUTH OBSERVER ── */
+  auth.onAuthStateChanged(async user => {
+    currentUser = user || null;
+
+    if (user) {
+      setScreen(true);
+      setTab("upload");
+
+      let displayName = user.displayName || "";
+      if (!displayName) {
+        try {
+          const snap = await db.ref("users/" + user.uid + "/profile/name").get();
+          displayName = snap.val() || "there";
+        } catch { displayName = "there"; }
+      }
+
+      welcomeText.textContent = "Hi, " + displayName + " 👋";
+      welcomeSub.textContent = user.email;
+      settingsEmailText.textContent = user.email || "–";
+      await loadUserSettings(user.uid);
+    } else {
+      cleanupUploadsListener();
+      currentUploads = [];
+      uploadedList.innerHTML = "";
+      selectedFiles = [];
+      fileInput.value = "";
+      renderSelectedFiles();
+      autoDeleteAfterDownload = false;
+      autoDeleteToggle.checked = false;
+      closeChangeNamePopup();
+      closeSettings();
+      closeViewer();
+      setScreen(false);
+      setAuthMode(false);
+    }
+  });
+
+  setAuthMode(false);
+</script>
+</body>
+</html>
