@@ -66,9 +66,7 @@
     }
 
     /* ─── AUTH ─── */
-    .auth-header {
-      padding: 28px 24px 0;
-    }
+    .auth-header { padding: 28px 24px 0; }
 
     .brand {
       display: flex;
@@ -119,7 +117,6 @@
     }
 
     .auth-body { padding: 0 24px 24px; }
-
     .field { margin-bottom: 14px; }
 
     label {
@@ -200,9 +197,7 @@
       border-color: #d1d5db;
     }
 
-    .google-icon {
-      flex-shrink: 0;
-    }
+    .google-icon { flex-shrink: 0; }
 
     .btn-ghost {
       background: transparent;
@@ -362,9 +357,7 @@
     .file-input-hidden { display: none; }
 
     /* ─── SELECTED FILES ─── */
-    .selected-wrap {
-      margin-top: 14px;
-    }
+    .selected-wrap { margin-top: 14px; }
 
     .selected-header {
       display: flex;
@@ -408,10 +401,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: .82rem;
+      font-size: .72rem;
       color: var(--primary);
-      font-weight: 700;
+      font-weight: 800;
       flex-shrink: 0;
+      text-transform: uppercase;
+      overflow: hidden;
     }
 
     .file-thumb-preview {
@@ -550,18 +545,10 @@
     .image-card.swiping-left { background: #fff1f1; border-color: #fca5a5; }
     .image-card.swiping-right { background: var(--success-light); border-color: #86efac; }
 
-    .image-card.anim-delete {
-      animation: slideOutLeft .26s ease forwards;
-    }
+    .image-card.anim-delete { animation: slideOutLeft .26s ease forwards; }
+    .image-card.anim-pin { animation: bounceIn .32s ease; }
 
-    .image-card.anim-pin {
-      animation: bounceIn .32s ease;
-    }
-
-    @keyframes slideOutLeft {
-      to { transform: translateX(-120%); opacity: 0; }
-    }
-
+    @keyframes slideOutLeft { to { transform: translateX(-120%); opacity: 0; } }
     @keyframes bounceIn {
       0% { transform: translateX(20px); }
       50% { transform: translateX(-5px); }
@@ -674,9 +661,7 @@
       padding: 12px;
     }
 
-    @media (min-height: 600px) {
-      .overlay { align-items: center; }
-    }
+    @media (min-height: 600px) { .overlay { align-items: center; } }
 
     .modal-sheet {
       width: 100%;
@@ -771,9 +756,7 @@
     .toggle-switch input:checked + .toggle-track { background: var(--primary); }
     .toggle-switch input:checked + .toggle-track::before { transform: translateX(20px); }
 
-    .settings-btn-row {
-      padding: 12px 14px;
-    }
+    .settings-btn-row { padding: 12px 14px; }
 
     /* ─── POPUP (change name) ─── */
     .popup-overlay {
@@ -903,7 +886,6 @@
     .toast .toast-icon { font-size: 1rem; }
 
     .toast.show { transform: translate(-50%, 0); opacity: 1; }
-
     .toast.success { background: #166534; }
     .toast.error { background: #991b1b; }
     .toast.info { background: #1e3a8a; }
@@ -978,7 +960,7 @@
     <section id="mainScreen" class="screen hidden">
       <div class="main-header">
         <div>
-          <div id="welcomeText" class="greeting">My Images</div>
+          <div id="welcomeText" class="greeting">My Files</div>
           <div class="greeting-sub" id="welcomeSub">Loading…</div>
         </div>
         <button id="settingsBtn" class="btn-icon btn" title="Settings">⚙️</button>
@@ -986,18 +968,18 @@
 
       <div class="tab-bar">
         <button id="tabUploadBtn" class="tab-btn active">Upload</button>
-        <button id="tabDownloadBtn" class="tab-btn">My Images</button>
+        <button id="tabDownloadBtn" class="tab-btn">My Files</button>
       </div>
 
       <!-- UPLOAD PANEL -->
       <div id="uploadPanel" class="panel">
         <label for="fileInput" class="drop-zone" id="dropZone">
-          <span class="drop-icon">🖼️</span>
-          <div class="drop-title">Choose images to upload</div>
-          <div class="drop-sub">JPG, PNG — any size</div>
+          <span class="drop-icon">📁</span>
+          <div class="drop-title">Choose files to upload</div>
+          <div class="drop-sub">PDFs, MP3, MP4, Code (.py, .js, .html), Text, Images & more</div>
           <span class="btn btn-soft" style="display:inline-flex; margin: 0 auto;">Browse files</span>
         </label>
-        <input id="fileInput" class="file-input-hidden" type="file" accept="image/*" multiple />
+        <input id="fileInput" class="file-input-hidden" type="file" multiple />
 
         <div id="selectedWrap" class="selected-wrap hidden">
           <div class="selected-header">
@@ -1011,7 +993,7 @@
           <div id="progressWrap" class="hidden">
             <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
           </div>
-          <button id="uploadBtn" class="btn btn-primary" disabled>Upload images</button>
+          <button id="uploadBtn" class="btn btn-primary" disabled>Upload files</button>
           <div id="uploadStatus" class="status-bar" style="justify-content: center;"></div>
         </div>
       </div>
@@ -1060,7 +1042,7 @@
       <div class="settings-row">
         <div>
           <div class="settings-row-label">Auto-delete after download</div>
-          <div class="settings-row-sub">Remove the image record as soon as you download it.</div>
+          <div class="settings-row-sub">Remove the file record as soon as you download it.</div>
         </div>
         <label class="toggle-switch">
           <input id="autoDeleteToggle" type="checkbox" />
@@ -1097,12 +1079,12 @@
   </div>
 </div>
 
-<!-- IMAGE VIEWER -->
+<!-- FILE VIEWER -->
 <div id="viewerModal" class="viewer hidden">
   <button id="viewerCloseBtn" class="viewer-close" aria-label="Close">✕</button>
   <button id="viewerPrevBtn" class="viewer-nav left" aria-label="Previous">‹</button>
   <div class="viewer-inner">
-    <img id="viewerImage" class="viewer-img" src="" alt="Preview" />
+    <div id="viewerMediaWrap" style="width:100%; display:flex; justify-content:center; align-items:center;"></div>
     <div id="viewerCaption" class="viewer-caption"></div>
   </div>
   <button id="viewerNextBtn" class="viewer-nav right" aria-label="Next">›</button>
@@ -1176,7 +1158,7 @@
   const confirmNameChangeBtn = document.getElementById("confirmNameChangeBtn");
 
   const viewerModal = document.getElementById("viewerModal");
-  const viewerImage = document.getElementById("viewerImage");
+  const viewerMediaWrap = document.getElementById("viewerMediaWrap");
   const viewerCaption = document.getElementById("viewerCaption");
   const viewerPrevBtn = document.getElementById("viewerPrevBtn");
   const viewerNextBtn = document.getElementById("viewerNextBtn");
@@ -1200,8 +1182,7 @@
   /* ── ASYNC INITIALIZATION ── */
   async function initApp() {
     try {
-      // Fetch keys.json from parent folder relative to public/index.html
-      const res = await fetch("../keys.json");
+      const res = await fetch("keys.json");
       if (!res.ok) throw new Error("Could not load keys.json");
       const keys = await res.json();
 
@@ -1209,13 +1190,11 @@
       CLOUDINARY_CLOUD_NAME = keys.cloudinary.cloudName;
       CLOUDINARY_UPLOAD_PRESET = keys.cloudinary.uploadPreset;
 
-      // Initialize Firebase services
       firebase.initializeApp(firebaseConfig);
       auth = firebase.auth();
       db = firebase.database();
       googleProvider = new firebase.auth.GoogleAuthProvider();
 
-      // Start auth observer once initialized
       auth.onAuthStateChanged(handleAuthStateChange);
     } catch (err) {
       console.error("Initialization error:", err);
@@ -1283,7 +1262,27 @@
   }
 
   function safeFileName(name) {
-    return (name || "image.jpg").replace(/[^\w.\-]+/g, "_");
+    return (name || "file").replace(/[^\w.\-]+/g, "_");
+  }
+
+  function getFileTypeCategory(filename = "", mimeType = "") {
+    const ext = filename.split('.').pop().toLowerCase();
+    if (mimeType.startsWith('image/') || ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico'].includes(ext)) {
+      return { type: 'image', icon: '🖼️', ext: ext.toUpperCase() };
+    }
+    if (mimeType.startsWith('video/') || ['mp4', 'webm', 'mkv', 'mov', 'avi'].includes(ext)) {
+      return { type: 'video', icon: '🎬', ext: ext.toUpperCase() };
+    }
+    if (mimeType.startsWith('audio/') || ['mp3', 'wav', 'ogg', 'aac', 'flac', 'm4a'].includes(ext)) {
+      return { type: 'audio', icon: '🎵', ext: ext.toUpperCase() };
+    }
+    if (ext === 'pdf' || mimeType === 'application/pdf') {
+      return { type: 'pdf', icon: '📄', ext: 'PDF' };
+    }
+    if (['py', 'js', 'html', 'css', 'json', 'ts', 'jsx', 'tsx', 'c', 'cpp', 'java', 'php', 'rb', 'go', 'rs', 'sh', 'md', 'txt'].includes(ext)) {
+      return { type: 'code', icon: '💻', ext: ext.toUpperCase() };
+    }
+    return { type: 'other', icon: '📁', ext: ext.toUpperCase() || 'FILE' };
   }
 
   function cloudinaryAttachmentUrl(url, filename) {
@@ -1313,18 +1312,27 @@
     const count = selectedFiles.length;
     selectedWrap.classList.toggle("hidden", count === 0);
     uploadBtn.disabled = count === 0;
-    selectedLabel.textContent = count === 1 ? "1 image selected" : count + " images selected";
+    selectedLabel.textContent = count === 1 ? "1 file selected" : count + " files selected";
 
     selectedFiles.forEach((file, idx) => {
       const li = document.createElement("li");
       li.className = "file-row";
 
-      const img = document.createElement("img");
-      img.className = "file-thumb-preview";
-      img.alt = "";
-      const reader = new FileReader();
-      reader.onload = e => { img.src = e.target.result; };
-      reader.readAsDataURL(file);
+      const cat = getFileTypeCategory(file.name, file.type);
+      if (cat.type === 'image') {
+        const img = document.createElement("img");
+        img.className = "file-thumb-preview";
+        img.alt = "";
+        const reader = new FileReader();
+        reader.onload = e => { img.src = e.target.result; };
+        reader.readAsDataURL(file);
+        li.appendChild(img);
+      } else {
+        const placeholder = document.createElement("div");
+        placeholder.className = "file-thumb-placeholder";
+        placeholder.textContent = cat.ext.slice(0, 4);
+        li.appendChild(placeholder);
+      }
 
       const meta = document.createElement("div");
       meta.className = "file-meta";
@@ -1339,7 +1347,6 @@
         renderSelectedFiles();
       });
 
-      li.appendChild(img);
       li.appendChild(meta);
       li.appendChild(rmBtn);
       selectedList.appendChild(li);
@@ -1348,7 +1355,8 @@
 
   /* ── UPLOAD ── */
   async function uploadToCloudinary(file) {
-    const endpoint = "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/image/upload";
+    // Cloudinary auto-endpoint detects images, videos, audio, and raw files (pdf, txt, code, etc.)
+    const endpoint = "https://api.cloudinary.com/v1_1/" + CLOUDINARY_CLOUD_NAME + "/auto/upload";
     const fd = new FormData();
     fd.append("file", file);
     fd.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
@@ -1368,7 +1376,7 @@
 
   function closeViewer() {
     viewerModal.classList.add("hidden");
-    viewerImage.src = "";
+    viewerMediaWrap.innerHTML = "";
     viewerCaption.textContent = "";
   }
 
@@ -1376,9 +1384,51 @@
     if (!currentUploads.length) { closeViewer(); return; }
     viewerIndex = Math.max(0, Math.min(viewerIndex, currentUploads.length - 1));
     const item = currentUploads[viewerIndex];
-    viewerImage.src = item.url;
-    viewerImage.alt = item.originalName || "preview";
-    viewerCaption.textContent = (item.originalName || "image") + " · " + (viewerIndex + 1) + " of " + currentUploads.length;
+    const cat = getFileTypeCategory(item.originalName || "", item.mimeType || "");
+    
+    viewerMediaWrap.innerHTML = "";
+
+    if (cat.type === 'image') {
+      const img = document.createElement("img");
+      img.className = "viewer-img";
+      img.src = item.url;
+      img.alt = item.originalName || "Preview";
+      viewerMediaWrap.appendChild(img);
+    } else if (cat.type === 'video') {
+      const video = document.createElement("video");
+      video.className = "viewer-img";
+      video.src = item.url;
+      video.controls = true;
+      video.autoplay = true;
+      viewerMediaWrap.appendChild(video);
+    } else if (cat.type === 'audio') {
+      const audio = document.createElement("audio");
+      audio.src = item.url;
+      audio.controls = true;
+      audio.autoplay = true;
+      audio.style.width = "100%";
+      audio.style.maxWidth = "400px";
+      viewerMediaWrap.appendChild(audio);
+    } else if (cat.type === 'pdf' || cat.type === 'code') {
+      const iframe = document.createElement("iframe");
+      iframe.src = item.url;
+      iframe.style.width = "100%";
+      iframe.style.height = "60dvh";
+      iframe.style.borderRadius = "var(--radius)";
+      iframe.style.border = "none";
+      iframe.style.background = "#fff";
+      viewerMediaWrap.appendChild(iframe);
+    } else {
+      const div = document.createElement("div");
+      div.style.padding = "40px 20px";
+      div.style.textAlign = "center";
+      div.style.color = "#fff";
+      div.innerHTML = `<div style="font-size:3.5rem; margin-bottom:12px;">${cat.icon}</div>
+                       <a href="${item.url}" target="_blank" rel="noopener noreferrer" style="color:#60a5fa; text-decoration:underline; font-weight:600; font-size:1rem;">Open or Preview File ↗</a>`;
+      viewerMediaWrap.appendChild(div);
+    }
+
+    viewerCaption.textContent = (item.originalName || "file") + " · " + (viewerIndex + 1) + " of " + currentUploads.length;
   }
 
   function showPrevImage() {
@@ -1398,7 +1448,7 @@
     if (!currentUser) return false;
     try {
       await db.ref("users/" + currentUser.uid + "/uploads/" + id).remove();
-      if (!silent) showToast("Image deleted", "error");
+      if (!silent) showToast("File deleted", "error");
       return true;
     } catch (err) {
       if (!silent) showToast("Delete failed", "error");
@@ -1486,15 +1536,15 @@
       uploadedList.innerHTML = `
         <div class="empty-state">
           <span class="empty-icon">📭</span>
-          <div class="empty-title">No images yet</div>
-          <div class="empty-sub">Upload your first images and they'll appear here.</div>
+          <div class="empty-title">No files yet</div>
+          <div class="empty-sub">Upload your files and they will appear here.</div>
         </div>`;
       if (!viewerModal.classList.contains("hidden")) closeViewer();
       setStatus(downloadStatus, "");
       return;
     }
 
-    countBadge.textContent = count + (count === 1 ? " image" : " images");
+    countBadge.textContent = count + (count === 1 ? " file" : " files");
     countBadge.classList.remove("hidden");
     swipeHint.classList.remove("hidden");
     setStatus(downloadStatus, "");
@@ -1504,11 +1554,24 @@
       li.className = "image-card";
       if (item.pinned) li.classList.add("is-pinned");
 
-      const img = document.createElement("img");
-      img.className = "img-thumb";
-      img.src = item.url;
-      img.alt = "thumbnail";
-      img.addEventListener("click", () => { if (!suppressPreviewClick) openViewer(index); });
+      const cat = getFileTypeCategory(item.originalName || "", item.mimeType || "");
+      let thumbEl;
+
+      if (cat.type === 'image' && item.url) {
+        thumbEl = document.createElement("img");
+        thumbEl.className = "img-thumb";
+        thumbEl.src = item.url;
+        thumbEl.alt = "thumbnail";
+      } else {
+        thumbEl = document.createElement("div");
+        thumbEl.className = "file-thumb-placeholder";
+        thumbEl.style.width = "52px";
+        thumbEl.style.height = "52px";
+        thumbEl.style.fontSize = ".75rem";
+        thumbEl.style.cursor = "pointer";
+        thumbEl.textContent = cat.ext.slice(0, 4);
+      }
+      thumbEl.addEventListener("click", () => { if (!suppressPreviewClick) openViewer(index); });
 
       const meta = document.createElement("div");
       meta.className = "img-meta";
@@ -1516,7 +1579,7 @@
 
       const nameLine = document.createElement("div");
       nameLine.className = "img-name";
-      nameLine.textContent = item.originalName || "image";
+      nameLine.textContent = item.originalName || "file";
 
       const infoLine = document.createElement("div");
       infoLine.className = "img-info";
@@ -1528,22 +1591,20 @@
       meta.appendChild(nameLine);
       meta.appendChild(infoLine);
 
+      li.appendChild(thumbEl);
+      li.appendChild(meta);
+
       if (item.pinned) {
         const tag = document.createElement("span");
         tag.className = "pin-tag";
         tag.textContent = "Pinned";
-        li.appendChild(img);
-        li.appendChild(meta);
         li.appendChild(tag);
-      } else {
-        li.appendChild(img);
-        li.appendChild(meta);
       }
 
       const dlBtn = document.createElement("button");
       dlBtn.className = "dl-btn";
       dlBtn.textContent = "⬇ Save";
-      dlBtn.addEventListener("click", e => { e.stopPropagation(); downloadImageDirect(item, dlBtn); });
+      dlBtn.addEventListener("click", e => { e.stopPropagation(); downloadFileDirect(item, dlBtn); });
       li.appendChild(dlBtn);
 
       uploadedList.appendChild(li);
@@ -1570,12 +1631,12 @@
   }
 
   /* ── DOWNLOAD ── */
-  async function downloadImageDirect(item, buttonEl) {
+  async function downloadFileDirect(item, buttonEl) {
     const orig = buttonEl.textContent;
     buttonEl.disabled = true;
     buttonEl.textContent = "…";
 
-    const filename = safeFileName(item.originalName || "image.jpg");
+    const filename = safeFileName(item.originalName || "file");
     let triggered = false;
 
     try {
@@ -1804,7 +1865,7 @@
       e.preventDefault();
       dropZone.classList.remove("drag-over");
       if (ev === "drop" && e.dataTransfer?.files?.length) {
-        selectedFiles = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+        selectedFiles = Array.from(e.dataTransfer.files);
         renderSelectedFiles();
       }
     });
@@ -1831,6 +1892,8 @@
           url: cloud.secure_url,
           publicId: cloud.public_id,
           originalName: file.name,
+          mimeType: file.type,
+          resourceType: cloud.resource_type || "auto",
           bytes: file.size,
           uploadedAt: Date.now(),
           pinned: false
@@ -1851,7 +1914,7 @@
 
     if (ok === total) {
       setStatus(uploadStatus, "All " + total + " uploaded successfully!", "green");
-      showToast("All images uploaded ✓", "success");
+      showToast("All files uploaded ✓", "success");
     } else {
       setStatus(uploadStatus, ok + " of " + total + " uploaded.", ok > 0 ? "green" : "red");
       showToast(ok + "/" + total + " uploaded", ok === total ? "success" : "error");

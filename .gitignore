@@ -1,4 +1,4 @@
 .firebase/
 .firebaserc
 apk/
-keys.json
+public/keys.json
