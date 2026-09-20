@@ -1116,24 +1116,11 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 
 <script>
-  /* ── CONFIG ── */
-  const firebaseConfig = {
-    apiKey: "AIzaSyAZnTjiT5bLf764Q2cK2AFSwjgUzSrj2LE",
-    authDomain: "dropspot-0.firebaseapp.com",
-    databaseURL: "https://dropspot-0-default-rtdb.firebaseio.com",
-    projectId: "dropspot-0",
-    storageBucket: "dropspot-0.appspot.com",
-    messagingSenderId: "606872364661",
-    appId: "1:606872364661:android:a0a26072d1b49ff0a37a3c"
-  };
-  const CLOUDINARY_CLOUD_NAME = "dykgkiciw";
-  const CLOUDINARY_UPLOAD_PRESET = "dykgkiciw";
-
-  /* ── INIT ── */
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.database();
-  const googleProvider = new firebase.auth.GoogleAuthProvider();
+  /* ── GLOBAL CONFIG & INSTANCES ── */
+  let firebaseConfig = {};
+  let CLOUDINARY_CLOUD_NAME = "";
+  let CLOUDINARY_UPLOAD_PRESET = "";
+  let auth, db, googleProvider;
 
   /* ── ELEMENTS ── */
   const authScreen = document.getElementById("authScreen");
@@ -1209,6 +1196,32 @@
   let viewerIndex = 0;
   let suppressPreviewClick = false;
   let toastTimer = null;
+
+  /* ── ASYNC INITIALIZATION ── */
+  async function initApp() {
+    try {
+      // Fetch keys.json from parent folder relative to public/index.html
+      const res = await fetch("../keys.json");
+      if (!res.ok) throw new Error("Could not load keys.json");
+      const keys = await res.json();
+
+      firebaseConfig = keys.firebaseConfig;
+      CLOUDINARY_CLOUD_NAME = keys.cloudinary.cloudName;
+      CLOUDINARY_UPLOAD_PRESET = keys.cloudinary.uploadPreset;
+
+      // Initialize Firebase services
+      firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.database();
+      googleProvider = new firebase.auth.GoogleAuthProvider();
+
+      // Start auth observer once initialized
+      auth.onAuthStateChanged(handleAuthStateChange);
+    } catch (err) {
+      console.error("Initialization error:", err);
+      showToast("Failed to load API keys", "error");
+    }
+  }
 
   /* ── HELPERS ── */
   function escapeHtml(str) {
@@ -1306,9 +1319,6 @@
       const li = document.createElement("li");
       li.className = "file-row";
 
-      const ext = (file.name.split(".").pop() || "img").toUpperCase().slice(0, 4);
-
-      // Try to create a preview thumbnail
       const img = document.createElement("img");
       img.className = "file-thumb-preview";
       img.alt = "";
@@ -1642,7 +1652,6 @@
       const result = await auth.signInWithPopup(googleProvider);
       const user = result.user;
 
-      // Sync user profile to RTDB if new or missing
       const snap = await db.ref("users/" + user.uid + "/profile").get();
       if (!snap.exists()) {
         await db.ref("users/" + user.uid).update({
@@ -1868,8 +1877,8 @@
     }
   });
 
-  /* ── AUTH OBSERVER ── */
-  auth.onAuthStateChanged(async user => {
+  /* ── AUTH OBSERVER HANDLER ── */
+  async function handleAuthStateChange(user) {
     currentUser = user || null;
 
     if (user) {
@@ -1903,8 +1912,10 @@
       setScreen(false);
       setAuthMode(false);
     }
-  });
+  }
 
+  /* ── START APP ── */
+  initApp();
   setAuthMode(false);
 </script>
 </body>
