@@ -26,18 +26,6 @@
 
 * 🎨 **Responsive Glassmorphism UI**: Mobile-first design with smooth CSS animations, dark-overlay modal sheets, and toast notifications.
 
-## 🛠️ Tech Stack
-
-* **Frontend**: HTML5, CSS3 (Modern Flexbox/Grid, Glassmorphism, Animations), Vanilla JavaScript (ES6+)
-
-* **Authentication**: Firebase Auth (Email/Password & Google Sign-In)
-
-* **Database**: Firebase Realtime Database
-
-* **Storage**: Cloudinary API (Multipart Uploads with progress tracking)
-
-* **Hosting**: Firebase Hosting
-
 ## 📖 Usage Guide
 
 1. **Sign Up / Log In**: Create an account using email/password or proceed with Google.
